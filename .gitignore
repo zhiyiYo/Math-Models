@@ -1,0 +1,11 @@
+# 忽略.vscode文件夹
+.vscode/
+
+# 忽略.mypy_cache文件夹
+.mypy_cache
+
+# 忽略工作区文件
+*.code-workspace
+
+# 忽略__pycache__文件夹
+*/__pycache__
