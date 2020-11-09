@@ -9,3 +9,6 @@
 
 # 忽略__pycache__文件夹
 */__pycache__
+
+# 忽略测试文件
+test.py
