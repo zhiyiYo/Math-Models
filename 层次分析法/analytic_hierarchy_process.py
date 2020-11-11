@@ -1,3 +1,5 @@
+# coding:utf-8
+
 import numpy as np
 import numpy.linalg as LA
 
@@ -26,7 +28,7 @@ class AHP:
         Parameters
         ----------
         method : 求取权重向量所用的方法，具体有::
-        
+
             - AHP.THEORETICAL_METHOD : 解析解
             - AHP.SQUARE_ROOT_METHOD : 方根法
             - AHP.SUM_PRODUCT_METHOD : 和积法
@@ -140,4 +142,3 @@ if __name__ == "__main__":
     # 层次总排序
     finalWeightVector = weightMat @ weightVector_1
     print(finalWeightVector)
-    

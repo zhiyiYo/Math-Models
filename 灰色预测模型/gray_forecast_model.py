@@ -1,3 +1,5 @@
+# coding:utf-8
+
 from bisect import bisect
 
 import numpy as np
