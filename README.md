@@ -1,7 +1,6 @@
 # Math Models
 
 ## Includes
------------
 
    * Analytic Hierachy Process
    * Gray-forecast Model
