@@ -10,3 +10,4 @@
       - Verhulst Model
    * Graph Theory Model
       - Dijkstra Method 
+      - Floyd Method

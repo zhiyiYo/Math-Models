@@ -1,6 +1,5 @@
-# coding:utf-8
-
 from itertools import product
+from typing import List
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -8,12 +7,11 @@ import numpy as np
 
 from draw_graph import drawNetwork, drawPath
 
-plt.rcParams['font.size'] = 15
 INF = float('inf')
 
 
-class Dijkstra:
-    """ Dijkstra算法解最短路 """
+class Floyd:
+    """ Floyd算法求最短路 """
 
     INF = float('inf')
 
@@ -42,70 +40,73 @@ class Dijkstra:
         self.end_vertex = end_vertex
         self.start_vertex = start_vertex
         self.adjacency_mat = np.array(adjacency_mat)
-
         if self.adjacency_mat.ndim != 2:
             raise Exception('adjacency_mat必须为二维array_like数组')
 
-        # 定点数和从当前顶点到其他顶点的路径数组
+        # 顶点数
         self.vertex_num = len(self.adjacency_mat)
-        self.distance_array = self.adjacency_mat[self.start_vertex].copy()
-
-        # 未处理的顶点列表
-        self.__passed_vertexes = [self.start_vertex]
-        self.__nopassed_vertexes = [i for i in range(
-            self.vertex_num) if i != self.start_vertex]
-
-        # 初始化从起始顶点到其他顶点的路径矩阵以及最短路列表
-        self.__path_mat = [[self.start_vertex, i]
-                           for i in range(self.vertex_num)]
-        self.__path_mat[0] = [self.start_vertex]
-        self.shortest_path = self.__path_mat[self.end_vertex]
+        # 从一个顶点到另外一个顶点的最短路长的矩阵
+        self.distance_mat = self.adjacency_mat.copy()
+        # 记录从一个顶点到另外一个顶点的中间节点的矩阵
+        self.path_mat = np.array([[i for i in range(self.vertex_num)]
+                                  for _ in range(self.vertex_num)], dtype=int)
+        self.shortest_path = []  # type:List[int]
 
     def findPath(self):
         """ 寻找最短路 """
-        while self.__nopassed_vertexes:
-            # 当前未经过的顶点的距离列表中的最短路及其对应的顶点
-            min_path = np.min(self.distance_array[self.__nopassed_vertexes])
-            vertexes = np.where(self.distance_array == min_path)[0]
-            # 找出不在passed_vertexes列表中的第一个最小值对应的顶点
-            vertex = [i for i in vertexes if i not in self.__passed_vertexes][0]
-            self.__nopassed_vertexes.remove(vertex)
-            self.__passed_vertexes.append(vertex)
+        ra = range(self.vertex_num)
+        for l, u, v in product(ra, ra, ra):
+            new_distance = self.distance_mat[u, l] + self.distance_mat[l, v]
+            if self.distance_mat[u, v] > new_distance:
+                # 更新中间节点和最短路程
+                self.distance_mat[u, v] = new_distance
+                self.path_mat[u, v] = self.path_mat[u, l]
 
-            for i in range(self.vertex_num):
-                new_path = self.adjacency_mat[vertex, i] + min_path
-                # 如果经过当前顶点到下一个顶点的路程小于起点到下一个顶点的路程就更新路
-                if new_path < self.distance_array[i]:
-                    self.distance_array[i] = new_path
-                    self.__path_mat[i] = self.__path_mat[vertex] + [i]
-
-        # 打印路径信息并显示图窗
+        # 打印最短路信息并显示图
         self.__printPathInfo()
         self.showGraph()
 
     def __printPathInfo(self):
-        """ 打印最短路的信息 """
-        self.is_find_path = (self.distance_array[self.end_vertex] != INF)
+        """ 打印最短路信息 """
+        self.is_find_path = (self.distance_mat[self.start_vertex,
+                                               self.end_vertex] != INF)
         if self.is_find_path:
-            # 最短路列表
-            self.shortest_path = self.__path_mat[self.end_vertex]  # type:list
-            print(f'{"最短路为：":<7}', ' → '.join(
-                [str(i) for i in self.shortest_path]))
-            print("最短路程为：", self.distance_array[self.end_vertex])
+            path = self.getShortestPath(self.start_vertex, self.end_vertex)
+            self.shortest_path = path
+            print(
+                '最短路程为：', self.distance_mat[self.start_vertex, self.end_vertex])
+            print(f'{"最短路为：":<7}', ' → '.join([str(i) for i in path]))
         else:
             print(f'无法找到从顶点{self.start_vertex}到顶点{self.end_vertex}的路径')
 
     def showGraph(self):
         """ 显示网络图和最短路 """
-        # 绘制网络图
         ax = plt.subplot(121) if self.is_find_path else plt.subplot(111)
         self.net_gragh, pos = drawNetwork(self.adjacency_mat, ax)
 
-        # 绘制最短路
         if self.is_find_path:
             path_ax = plt.subplot(122)  # type:plt.Axes
             self.path_graph, _ = drawPath(
                 self.adjacency_mat, self.shortest_path, path_ax, pos)
+
+    def getShortestPath(self, start_vertex: int, end_vertex: int):
+        """ 从已有的路径矩阵中查找最短路
+
+        Parameters
+        ----------
+        start_vertex : 起点标号，标号最小值为0\n
+        end_vertex : 终点标号，标号最小值为0
+        """
+        if np.array_equal(self.distance_mat, self.adjacency_mat):
+            self.findPath()
+
+        vertex = self.path_mat[self.start_vertex, self.end_vertex]
+        shortest_path = [self.start_vertex, vertex]
+        while vertex != self.end_vertex:
+            vertex = self.path_mat[vertex, self.end_vertex]
+            shortest_path.append(vertex)
+
+        return shortest_path
 
 
 if __name__ == "__main__":
@@ -116,6 +117,7 @@ if __name__ == "__main__":
                      [INF, INF, INF, INF, 0, 4],
                      [INF, INF, INF, INF, INF, 0]]
 
-    solution = Dijkstra(0, 5, adjacency_mat)
+    solution = Floyd(1, 5, adjacency_mat)
     solution.findPath()
+    print(solution.getShortestPath(1, 5))
     plt.show()

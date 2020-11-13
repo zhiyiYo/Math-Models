@@ -35,7 +35,13 @@ path = nx.dijkstra_path(graph, source, target)
 min_len = nx.dijkstra_path_length(graph, source, target)
 predecessor, dist = nx.dijkstra_predecessor_and_distance(graph, source)
 
-print(f'从起点{source}到终点{target}的最短路为：{path}\n'
+# 使用弗洛伊德算法寻找最短路
+distance_mat = nx.floyd_warshall_numpy(graph)  # 计算每个节点之间的最短路程矩阵
+pred, distance_dict = nx.floyd_warshall_predecessor_and_distance(graph)
+
+# 从pred中提取最短路
+print(f'从起点{source}到终点{target}的最短路为：{nx.reconstruct_path(0,5,pred)}\n'
+      f'从起点{source}到终点{target}的最短路为：{path}\n'
       f'从起点{source}到终点{target}的最短路长：{min_len}\n'
       f'从起点{source}到各个顶点的最短路长为：{dist}')
 
