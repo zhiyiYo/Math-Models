@@ -7,13 +7,13 @@ import numpy as np
 
 from draw_graph import drawNetwork, drawPath
 
-INF = float('inf')
+INF = 1<<20
 
 
 class Floyd:
     """ Floyd算法求最短路 """
 
-    INF = float('inf')
+    INF = 1<<20
 
     def __init__(self, start_vertex: int, end_vertex: int, adjacency_mat):
         """ 创建Dijkstra对象

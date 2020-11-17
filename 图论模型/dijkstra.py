@@ -9,13 +9,13 @@ import numpy as np
 from draw_graph import drawNetwork, drawPath
 
 plt.rcParams['font.size'] = 15
-INF = float('inf')
+INF = 1 << 20
 
 
 class Dijkstra:
     """ Dijkstra算法解最短路 """
 
-    INF = float('inf')
+    INF = 1 << 20
 
     def __init__(self, start_vertex: int, end_vertex: int, adjacency_mat):
         """ 创建Dijkstra对象
@@ -109,12 +109,13 @@ class Dijkstra:
 
 
 if __name__ == "__main__":
-    adjacency_mat = [[0, 1, 12, INF, INF, INF],
-                     [INF, 0, 9, 3, INF, INF],
-                     [INF, INF, 0, INF, 5, INF],
-                     [INF, INF, 4, 0, 13, 15],
-                     [INF, INF, INF, INF, 0, 4],
-                     [INF, INF, INF, INF, INF, 0]]
+    _ = INF
+    adjacency_mat = [[0, 1, 12, _, _,  _],
+                     [_, 0, 9, 3, _,  _],
+                     [_, _, 0, _, 5,  _],
+                     [_, _, 4, 0, 13, 15],
+                     [_, _, _, _, 0,  4],
+                     [_, _, _, _, _,  0]]
 
     solution = Dijkstra(0, 5, adjacency_mat)
     solution.findPath()
