@@ -22,7 +22,7 @@ draw_network_options = {
 }
 
 
-def drawNetwork(adjacency_mat, ax: plt.Axes = None, pos: dict = None,
+def drawNetwork(adjacency_mat=None, ax: plt.Axes = None, pos: dict = None,
                 is_digragh: bool = True) -> Tuple[Union[nx.DiGraph, nx.Graph], dict]:
     """ 绘制网络图
 
@@ -61,13 +61,14 @@ def drawNetwork(adjacency_mat, ax: plt.Axes = None, pos: dict = None,
 
     # 每条边的权重标签
     labels = {(u, v): weight for u, v,
-                weight in G.edges.data('weight')}
+              weight in G.edges.data('weight')}
 
-     # 绘图参数
+    # 绘图参数
     pos = nx.shell_layout(G) if not pos else pos  # 布局
-
     # 如果ax为None则新建坐标区
-    ax = plt.subplot(111) if not ax else ax
+    if not ax:
+        fig = plt.figure()  # type:plt.Figure
+        ax = fig.add_subplot()
     ax.set_title('Network')
     nx.draw_networkx(G, pos, ax=ax, **draw_network_options)
     nx.draw_networkx_edge_labels(
@@ -115,7 +116,9 @@ def drawPath(adjacency_mat, path: list, ax: plt.Axes = None,
         G.add_edge(u, v, weight=adjacency_mat[u, v])
 
     pos = nx.shell_layout(G) if not pos else pos
-    ax = plt.subplot(111) if not ax else ax
+    if not ax:
+        fig = plt.figure()  # type:plt.Figure
+        ax = fig.add_subplot()
     ax.set_title('Shortest Path')
     nx.draw_networkx(G, pos, ax=ax, **draw_network_options)
     nx.draw_networkx_edge_labels(
@@ -150,3 +153,58 @@ def drawMST(MST_mat, ax: plt.Axes = None, pos: dict = None) -> Tuple[Union[nx.Di
 
     # 绘图
     return drawNetwork(adjacency_mat, ax, pos, False)
+
+
+def drawFlow(edges: list, ax: plt.Axes = None, pos: dict = None,
+             is_digragh: bool = True) -> Tuple[Union[nx.DiGraph, nx.Graph], dict]:
+    """ 绘制流图
+
+    Parameters
+    ----------
+    edges : list
+        每个元素代表一条边，元素格式为 `(u, v, capacity)` 或 `(u, v, capacity, cost)`
+
+    path : list
+        记录路径中各节点的列表
+
+    ax : `~matplotlib.axes.Axes` 
+        用于绘图的坐标区，如果为None则新建一个
+
+    pos : dict
+        控制绘图的布局字典
+
+    is_digragh : bool
+        是否绘制为有向图，默认为 True
+
+    Returns
+    -------
+    G : `~nx.DiGragh`
+        有向图
+
+    pos : dict
+        记录G中各节点位置的字典
+    """
+    if len(edges[0]) == 3:
+        labels = {(u, v): value for u, v, value in edges}
+        edges = [(u, v, {'capacity': value}) for u, v, value in edges]
+    elif len(edges[0]) == 4:
+        labels = {(u, v): tuple(value) for u, v, *value in edges}
+        edges = [(u, v, {'capacity': value[0], 'weight':value[1]})
+                 for u, v, *value in edges]
+    else:
+        raise Exception('edges的每个元组只能有3个或4个元素')
+
+    G = nx.DiGraph() if is_digragh else nx.Graph()
+    G.add_edges_from(edges)
+
+    pos = nx.shell_layout(G) if not pos else pos  # 布局
+    # 如果ax为None则新建坐标区
+    if not ax:
+        fig = plt.figure()  # type:plt.Figure
+        ax = fig.add_subplot()
+    ax.set_title('Flow Graph')
+    nx.draw_networkx(G, pos, ax=ax, **draw_network_options)
+    nx.draw_networkx_edge_labels(
+        G, pos, labels, font_family='Times New Roman', font_size=13)
+
+    return (G, pos)

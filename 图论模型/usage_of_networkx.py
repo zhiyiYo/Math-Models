@@ -45,5 +45,10 @@ print(f'从起点{source}到终点{target}的最短路为：{nx.reconstruct_path
       f'从起点{source}到终点{target}的最短路长：{min_len}\n'
       f'从起点{source}到各个顶点的最短路长为：{dist}')
 
+# 使用Prim算法寻找最小生成树
+G = graph.to_undirected()
+MST = nx.minimum_spanning_tree(G,algorithm='prim')  # type:nx.Graph
+print(MST.edges(data=True))
+
 plt.title('Network')
 plt.show()

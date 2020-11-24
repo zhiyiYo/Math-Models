@@ -1,3 +1,5 @@
+# coding:utf-8
+
 from itertools import product
 from typing import List
 
@@ -7,22 +9,27 @@ import numpy as np
 
 from draw_graph import drawNetwork, drawPath
 
-INF = 1<<20
+INF = 1 << 20
 
 
 class Floyd:
     """ Floyd算法求最短路 """
 
-    INF = 1<<20
+    INF = 1 << 20
 
     def __init__(self, start_vertex: int, end_vertex: int, adjacency_mat):
-        """ 创建Dijkstra对象
+        """ 创建Floyd对象
 
         Parameters
         ----------
-        start_vertex : 起点标号，标号最小值为0\n
-        end_vertex : 终点标号，标号最小值为0\n
-        adjacency_mat : 邻接矩阵，类型为二维array_like数组
+        start_vertex : int\n
+            起点标号，标号最小值为0
+
+        end_vertex : int\n
+            终点标号，标号最小值为0
+
+        adjacency_mat : 二维array_like\n
+            邻接矩阵
         """
         self.setModel(start_vertex, end_vertex, adjacency_mat)
 
@@ -31,15 +38,21 @@ class Floyd:
 
         Parameters
         ----------
-        start_vertex : 起点标号，标号最小值为0\n
-        end_vertex : 终点标号，标号最小值为0\n
-        adjacency_mat : 邻接矩阵，类型为二维array_like数组
+        start_vertex : int\n
+            起点标号，标号最小值为0
+
+        end_vertex : int\n
+            终点标号，标号最小值为0
+
+        adjacency_mat : 二维array_like\n
+            邻接矩阵
         """
         # 初始化起点、终点和邻接矩阵
         self.is_find_path = False
         self.end_vertex = end_vertex
         self.start_vertex = start_vertex
         self.adjacency_mat = np.array(adjacency_mat)
+
         if self.adjacency_mat.ndim != 2:
             raise Exception('adjacency_mat必须为二维array_like数组')
 
@@ -52,8 +65,19 @@ class Floyd:
                                   for _ in range(self.vertex_num)], dtype=int)
         self.shortest_path = []  # type:List[int]
 
-    def findPath(self):
-        """ 寻找最短路 """
+    def findPath(self, is_show_gragh: bool = True) -> list:
+        """寻找并返回最短路
+
+        Parameters
+        ----------
+        is_show_gragh : bool, optional\n
+            是否显示最短路, 默认为 True
+
+        Returns
+        -------
+        shortest_path : list\n
+            返回最短路的顶点列表
+        """
         ra = range(self.vertex_num)
         for l, u, v in product(ra, ra, ra):
             new_distance = self.distance_mat[u, l] + self.distance_mat[l, v]
@@ -64,7 +88,9 @@ class Floyd:
 
         # 打印最短路信息并显示图
         self.__printPathInfo()
-        self.showGraph()
+        if is_show_gragh:
+            self.showGraph()
+        return self.shortest_path
 
     def __printPathInfo(self):
         """ 打印最短路信息 """
@@ -81,21 +107,31 @@ class Floyd:
 
     def showGraph(self):
         """ 显示网络图和最短路 """
-        ax = plt.subplot(121) if self.is_find_path else plt.subplot(111)
-        self.net_gragh, pos = drawNetwork(self.adjacency_mat, ax)
+        # 绘制网络图
+        fig = plt.figure()  # type:plt.Figure
+        ax = fig.add_subplot(121) if self.is_find_path else fig.add_subplot()
+        self.net_gragh, pos = drawNetwork(self.adjacency_mat, ax=ax)
 
         if self.is_find_path:
-            path_ax = plt.subplot(122)  # type:plt.Axes
+            path_ax = fig.add_subplot(122)  # type:plt.Axes
             self.path_graph, _ = drawPath(
                 self.adjacency_mat, self.shortest_path, path_ax, pos)
 
-    def getShortestPath(self, start_vertex: int, end_vertex: int):
+    def getShortestPath(self, start_vertex: int, end_vertex: int)->list:
         """ 从已有的路径矩阵中查找最短路
 
         Parameters
         ----------
-        start_vertex : 起点标号，标号最小值为0\n
-        end_vertex : 终点标号，标号最小值为0
+        start_vertex : int\n
+            起点标号，标号最小值为0
+
+        end_vertex : int\n
+            终点标号，标号最小值为0
+        
+        Returns
+        -------
+        shortest_path : list\n
+            返回最短路的顶点列表
         """
         if np.array_equal(self.distance_mat, self.adjacency_mat):
             self.findPath()

@@ -8,7 +8,6 @@ import numpy as np
 
 from draw_graph import drawNetwork, drawPath
 
-plt.rcParams['font.size'] = 15
 INF = 1 << 20
 
 
@@ -22,9 +21,14 @@ class Dijkstra:
 
         Parameters
         ----------
-        start_vertex : 起点标号，标号最小值为0\n
-        end_vertex : 终点标号，标号最小值为0\n
-        adjacency_mat : 邻接矩阵，类型为二维array_like数组
+        start_vertex : int\n
+            起点标号，标号最小值为0
+
+        end_vertex : int\n
+            终点标号，标号最小值为0
+
+        adjacency_mat : 二维array_like\n
+            邻接矩阵
         """
         self.setModel(start_vertex, end_vertex, adjacency_mat)
 
@@ -33,9 +37,14 @@ class Dijkstra:
 
         Parameters
         ----------
-        start_vertex : 起点标号，标号最小值为0\n
-        end_vertex : 终点标号，标号最小值为0\n
-        adjacency_mat : 邻接矩阵，类型为二维array_like数组
+        start_vertex : int\n
+            起点标号，标号最小值为0
+
+        end_vertex : int\n
+            终点标号，标号最小值为0
+
+        adjacency_mat : 二维array_like\n
+            邻接矩阵
         """
         # 初始化起点、终点和邻接矩阵
         self.is_find_path = False
@@ -61,8 +70,19 @@ class Dijkstra:
         self.__path_mat[0] = [self.start_vertex]
         self.shortest_path = self.__path_mat[self.end_vertex]
 
-    def findPath(self):
-        """ 寻找最短路 """
+    def findPath(self, is_show_gragh: bool = True) -> list:
+        """寻找并返回最短路
+
+        Parameters
+        ----------
+        is_show_gragh : bool, optional\n
+            是否显示最短路, 默认为True
+
+        Returns
+        -------
+        shortest_path : list\n
+            返回最短路的顶点列表
+        """
         while self.__nopassed_vertexes:
             # 当前未经过的顶点的距离列表中的最短路及其对应的顶点
             min_path = np.min(self.distance_array[self.__nopassed_vertexes])
@@ -81,7 +101,9 @@ class Dijkstra:
 
         # 打印路径信息并显示图窗
         self.__printPathInfo()
-        self.showGraph()
+        if is_show_gragh:
+            self.showGraph()
+        return self.shortest_path
 
     def __printPathInfo(self):
         """ 打印最短路的信息 """
@@ -98,12 +120,13 @@ class Dijkstra:
     def showGraph(self):
         """ 显示网络图和最短路 """
         # 绘制网络图
-        ax = plt.subplot(121) if self.is_find_path else plt.subplot(111)
-        self.net_gragh, pos = drawNetwork(self.adjacency_mat, ax)
+        fig = plt.figure()  # type:plt.Figure
+        ax = fig.add_subplot(121) if self.is_find_path else fig.add_subplot()
+        self.net_gragh, pos = drawNetwork(self.adjacency_mat, ax=ax)
 
         # 绘制最短路
         if self.is_find_path:
-            path_ax = plt.subplot(122)  # type:plt.Axes
+            path_ax = fig.add_subplot(122)  # type:plt.Axes
             self.path_graph, _ = drawPath(
                 self.adjacency_mat, self.shortest_path, path_ax, pos)
 
