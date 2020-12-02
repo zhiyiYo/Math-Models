@@ -28,3 +28,16 @@
    * TSP Problem
 
 ## Population Competition Model
+   * PopulationCompetitionModel
+
+## Queuing Model
+ * M/M/1/∞ Model
+ * M/M/s/∞ Model
+
+## Linear Programming
+   * Linear Programming
+   * Transportation Problem
+   * Assignment Problem
+
+## Principal Component Analysis
+   * PCA
