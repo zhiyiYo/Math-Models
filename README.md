@@ -39,5 +39,20 @@
    * Transportation Problem
    * Assignment Problem
 
-## Principal Component Analysis
+## Mathematical Statistics
+   * Hypothesis Test
+   * Variable Analysis
+
+## Interpolation and Fitting
+   * Curve Fit
+   * N dim Interpolation
+
+## Multivariate Analysis
    * PCA
+      - Principal Component Analysis
+      - Principal Component Regression
+
+   * Linear Regression
+      - Unitary Regression
+      - Multiple Regression
+

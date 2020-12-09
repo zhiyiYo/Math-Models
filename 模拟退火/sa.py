@@ -1,6 +1,6 @@
 # coding:utf-8
 
-from math import cos, exp, sin
+from math import exp, sin
 from random import random, uniform
 from typing import List, Tuple
 
