@@ -80,7 +80,7 @@ class PCA:
             data, range(1, len(self.eig_values) + 1))
         self.component_df.index.name = '成分'
 
-        # 主成分载荷矩阵
+        # 载荷矩阵
         self.prin_comp_load_mat = np.sqrt(
             self.feature_values) * self.feature_vector_mat
         # 主成分决策矩阵(主成分得分矩阵), 每一列代表一种主成分的值

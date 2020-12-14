@@ -52,6 +52,10 @@
       - Principal Component Analysis
       - Principal Component Regression
 
+   * Cluster Analysis
+      - Systematic Clustering Method
+      - Variable Clustering Method
+
    * Linear Regression
       - Unitary Regression
       - Multiple Regression

@@ -2,7 +2,7 @@ import pulp
 import numpy as np
 
 
-# 创建线性规划问题对象
+# 创建线性规划问题对象，可以通过cat关键字指定变量类型，如 0-1变量:pulp.LpBinary
 lp = pulp.LpProblem('线性规划', pulp.LpMaximize)
 
 # 创建决策变量
