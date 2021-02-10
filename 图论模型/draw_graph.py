@@ -12,7 +12,10 @@ INF = 1 << 20
 # 控制绘图的样式
 draw_network_options = {
     "font_family": "consolas",
-    "edge_color": "#A0D0F0",
+    #"edge_color": "#A0D0F0",
+    "node_color": "#009999",
+    "edgecolors": "#006f6f",
+    'edge_color': '#009999',
     "font_color": "white",
     "arrowstyle": '->',
     "node_size": 500,
@@ -28,24 +31,24 @@ def drawNetwork(adjacency_mat=None, ax: plt.Axes = None, pos: dict = None,
 
     Parameters
     ----------
-    adjacency_mat : 二维`array_like`\n
+    adjacency_mat : 二维`array_like`
         邻接矩阵
 
-    ax : `~matplotlib.axes.Axes` \n
+    ax : `~matplotlib.axes.Axes` 
         用于绘图的坐标区，如果为None则新建一个
 
-    pos : dict\n
+    pos : dict
         控制绘图的布局字典
 
-    is_digragh : bool\n
+    is_digragh : bool
         是否绘制为有向图，默认为True
 
     Returns
     -------
-    G : `~nx.DiGragh`\n
+    G : `~nx.DiGragh`
         有向图
 
-    pos : dict\n
+    pos : dict
         记录G中各节点位置的字典
     """
     G = nx.DiGraph() if is_digragh else nx.Graph()

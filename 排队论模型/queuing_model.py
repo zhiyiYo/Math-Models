@@ -34,7 +34,7 @@ class QueuingModel:
 
         model_type : int
             模型类型, 有以下几种::
-
+            
                 - QueuingModel.MM1   : M/M/1/∞ 模型
                 - QueuingModel.MMS   : M/M/s/∞ 模型
                 - QQueuingModel.MM1N : M/M/1/N 模型

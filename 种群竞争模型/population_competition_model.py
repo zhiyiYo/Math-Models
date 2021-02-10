@@ -28,10 +28,10 @@ class PopulationCompetitionModel:
             种群2的最大环境容纳量, by default 100
 
         s1 : float
-            种群2的消耗资源量对种群1的资源消耗量的比值
+            种群2消耗的供养种群1资源量对种群1的消耗量的比值
 
         s2 : float
-            种群1的消耗资源量对种群2的资源消耗量的比值
+            种群1消耗的供养种群1资源量对种群2的消耗量的比值
 
         x10 : int
             种群1的初始值
@@ -128,7 +128,7 @@ class PopulationCompetitionModel:
         X2, X1 = np.mgrid[-100: 2 * self.n1 :2, -100: 2 * self.n2 :2]
         u, v = self.__deriv([X1, X2], 0)
         r = np.sqrt(u ** 2 + v ** 2)
-        stream = ax.streamplot(X1, X2, u, v, color=r, cmap=plt.cm.brg,density=1.5)
+        stream = ax.streamplot(X1, X2, u, v, color=r, cmap=plt.cm.brg, density=1.5)
         fig.colorbar(stream.lines)
         ax.set(xlabel=r'$x_1$', ylabel=r'$x_2$',
                title=r'$Population\ Phase\ Trajectories$')
